@@ -35,7 +35,7 @@ svycollapse <- function(data, depvar = NULL, response = NULL, wgt = NULL, group_
       as_survey_design(ids = 1, weights = .data[[wgt]]) %>%
       group_by(.data[[group_var]], .data[[depvar]], .data[[response]]) %>%
       summarize(prop = 100 * survey_mean(variable = .data[[response]], na.rm = TRUE), .groups = 'drop') %>%
-      filter(.data[[response]] == 100 | .data[[response]] == 1) %>%
+      #filter(.data[[response]] == 100 | .data[[response]] == 1) %>%
       mutate(proplabel = paste0(round(prop, 1), "%"))
   } else {
     data %>%
@@ -43,7 +43,7 @@ svycollapse <- function(data, depvar = NULL, response = NULL, wgt = NULL, group_
       as_survey_design(ids = 1, weights = .data[[wgt]]) %>%
       group_by(.data[[depvar]], .data[[response]]) %>%
       summarize(prop = 100 * survey_mean(variable = .data[[response]], na.rm = TRUE), .groups = 'drop') %>%
-      filter(.data[[response]] == 100 | .data[[response]] == 1) %>%
+      #filter(.data[[response]] == 100 | .data[[response]] == 1) %>%
       mutate(proplabel = paste0(round(prop, 1), "%"))
   }
 }
