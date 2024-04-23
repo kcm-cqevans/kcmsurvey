@@ -1,12 +1,13 @@
 Package: kcmsurvey
-Title: What the Package Does (One Line, Title Case)
+Title: Make using survey data easier
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
+    person("Claire", "Evans", , "clevans@kingcounty.gov", role = c("aut", "cre"),
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Description: This package hosts a suite of functions that make it easier to use survey data. You can easily transform data from wide to long, rename those transformed columns, create estimates and confidence intervals, as well as work with data visualization. 
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Imports: dplyr, stringr 
+Config/testthat/edition: 3

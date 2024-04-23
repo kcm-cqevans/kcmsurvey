@@ -1,5 +1,17 @@
-replacename <- function(data, column, pattern_replacements, na_action = "keep", verbose = FALSE) {
-  validate_df_cols(data, column)
+#' Rename Values in a Column
+#'
+#' @param data Data frame that is of interest
+#' @param column The name of the column to transform (the one where the values are to be replaced with new values).
+#' @param pattern_replacements A named vector with key:value pairs ex. userlanguage = language, sat_bus = Bus, etc.
+#' @param na_action A character string specifying the action for NA values:
+#'                  "keep" (default), "remove", or a specific value for replacement.
+#' @param verbose Boolean indicating if detailed output should be printed.
+#'
+#' @import dplyr
+#' @import stringr
+#' @export
+#'
+replacevalues <- function(data, column, pattern_replacements, na_action = "keep", verbose = FALSE) {
 
   # Convert factor to character if necessary
   if (is.factor(data[[column]])) {
