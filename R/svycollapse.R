@@ -1,3 +1,21 @@
+#' Collapse survey data and compute proportions
+#'
+#' This function collapses survey data and computes proportions of responses for a given variable.
+#'
+#' @param data A data frame containing the survey data.
+#' @param depvar The column name representing the dependent variable, if not present in data.
+#' @param response The column name representing the response variable, if not present in data.
+#' @param wgt The column name representing the weights, if not present in data.
+#' @param group_var (Optional) The column name representing the grouping variable.
+#'
+#' @import survey
+#' @import rlang
+#' @importFrom srvyr as_survey_design
+#' @importFrom srvyr survey_mean
+#' @return A summarized data frame with proportions of responses.
+#' @export
+#'
+
 svycollapse <- function(data, depvar = NULL, response = NULL, wgt = NULL, group_var = NULL) {
   # Check if columns exist in data, if not, use the provided parameters
   if (!all(c("depvar", "response", "wgt") %in% names(data))) {
