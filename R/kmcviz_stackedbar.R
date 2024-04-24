@@ -22,7 +22,7 @@
 #' @import ggplot2
 #' @return A ggplot object representing the agreement visualization.
 #' @export
-kcmviz_agreestack <-  function(data, outcome_var = data$prop, prop_labels = data$proplabel,
+kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data$proplabel,
                                  var_labels = data$varlabel, value_labels = data$vallabel,
                                  main_title = "",
                                  subtitle = "",
