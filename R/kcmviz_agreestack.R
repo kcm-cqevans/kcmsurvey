@@ -34,8 +34,27 @@ kcmviz_agreestack <-  function(data, outcome_var = data$prop, prop_labels = data
                                  subtitle_h_just = 0,
                                  fixed_aspect_ratio = TRUE,
                                  legendnrow = 1,
-                                 color_scheme = c("#FF0000", "#FF6666",  "#FFCC33", "#338585", "#006666")){
-  if(!inherits(var_labels, "character") & !inherits(var_labels, "factor")){
+                                 color_scheme = NULL,
+                                 colors=NULL){
+
+  if (!is.null(colors)) {
+    # Use custom colors if provided
+    colors <- colors
+  } else if (!is.null(color_scheme)) {
+    # Define color schemes
+    color_schemes <- list(
+      "agree_dis5" = c("#FF0000", "#FF6666",  "#FFCC33", "#338585", "#006666"),
+      "agree_dis4" = c("#FF0000", "#FF6666",  "#338585", "#006666"),
+      "categorical" = c("#2D708E", "#008381", "#C74E49", "#784885", "#a43d6a","#202020")
+    )
+
+    # Select color scheme based on input
+    colors <- color_schemes[[color_scheme]]
+  } else {
+    stop("Either 'colors' or 'color_scheme' must be provided.") }
+
+
+   if(!inherits(var_labels, "character") & !inherits(var_labels, "factor")){
     var_labels = as.character(var_labels)
     data$varlabels = as.character(data$varlabel)
   }
@@ -43,7 +62,9 @@ kcmviz_agreestack <-  function(data, outcome_var = data$prop, prop_labels = data
     value_labels = as.character(value_labels)
     data$vallabel = as.character(data$vallabel)
   }
-  mycolors = rev(color_scheme[seq_along(unique(value_labels))])
+
+  mycolors = rev(colors[seq_along(unique(value_labels))])
+
   if(rev_values == TRUE){
     value_labels = factor(value_labels, levels = unique(value_labels))
   } else{

@@ -20,7 +20,8 @@ kcmviz_agreestack(
   subtitle_h_just = 0,
   fixed_aspect_ratio = TRUE,
   legendnrow = 1,
-  color_scheme = c("#FF0000", "#FF6666", "#FFCC33", "#338585", "#006666")
+  color_scheme = NULL,
+  colors = NULL
 )
 }
 \arguments{
