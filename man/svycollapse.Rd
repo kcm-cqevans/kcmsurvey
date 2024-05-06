@@ -4,14 +4,20 @@
 \alias{svycollapse}
 \title{Collapse survey data and compute proportions}
 \usage{
-svycollapse(data, depvar = NULL, response = NULL, wgt = NULL, group_var = NULL)
+svycollapse(
+  data,
+  element_var = NULL,
+  response_category = NULL,
+  wgt = NULL,
+  group_var = NULL
+)
 }
 \arguments{
 \item{data}{A data frame containing the survey data.}
 
-\item{depvar}{The column name representing the dependent variable, if not present in data.}
+\item{element_var}{The column name representing the dependent variable, if not present in data.}
 
-\item{response}{The column name representing the response variable, if not present in data.}
+\item{response_category}{The column name representing the response_category variable, if not present in data.}
 
 \item{wgt}{The column name representing the weights, if not present in data.}
 

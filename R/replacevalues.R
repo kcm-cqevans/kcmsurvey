@@ -11,7 +11,9 @@
 #' @import stringr
 #' @export
 #'
+
 replacevalues <- function(data, column, pattern_replacements, na_action = "keep", verbose = FALSE) {
+
 
   # Convert factor to character if necessary
   if (is.factor(data[[column]])) {

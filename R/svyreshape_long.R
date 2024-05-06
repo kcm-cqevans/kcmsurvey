@@ -45,7 +45,7 @@ svyreshape_long <- function(data, pivot_cols = NULL, not_pivot_cols = NULL, drop
 
   # Reshape the data
   data_long <- data %>%
-    pivot_longer(cols = all_of(cols_to_pivot), names_to = "depvar", values_to = "response") %>%
+    pivot_longer(cols = all_of(cols_to_pivot), names_to = "element_var", values_to = "response_category") %>%
     as.data.frame()
 
   if (drop_na) {

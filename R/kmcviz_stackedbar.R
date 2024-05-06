@@ -23,7 +23,7 @@
 #' @return A ggplot object representing the agreement visualization.
 #' @export
 kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data$proplabel,
-                                 var_labels = data$varlabel, value_labels = data$vallabel,
+                                 var_labels = data$element_var, value_labels = data$response_category,
                                  main_title = "",
                                  subtitle = "",
                                  source_info = "",
@@ -56,11 +56,11 @@ kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data
 
    if(!inherits(var_labels, "character") & !inherits(var_labels, "factor")){
     var_labels = as.character(var_labels)
-    data$varlabels = as.character(data$varlabel)
+    data$element_vars = as.character(data$element_var)
   }
   if(!inherits(value_labels, "character") & !inherits(value_labels, "factor")){
     value_labels = as.character(value_labels)
-    data$vallabel = as.character(data$vallabel)
+    data$response_category = as.character(data$response_category)
   }
 
   mycolors = rev(colors[seq_along(unique(value_labels))])
@@ -71,7 +71,7 @@ kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data
     value_labels = factor(value_labels, levels = rev(unique(value_labels)))
   }
   positions = rev(unique(var_labels))
-  update_geom_defaults("text", list(family = "lato"))
+  update_geom_defaults("text", list(family = "roboto"))
   if(order_bars == TRUE){
     var_labels = factor(var_labels, levels = unique(var_labels))
     data = data.frame(var_labels, value_labels, outcome_var, prop_labels)
@@ -100,28 +100,28 @@ kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data
                                aes(label = ifelse(outcome_var < 5 & hide_small_values == FALSE, prop_labels, NA)),
                                position = position_stack(vjust = 0.5),
                                color = "#FFFFFF", segment.color = 'transparent',
-                               fontface = "bold", size = 4, family = "lato",
+                               fontface = "bold", size = 4, family = "roboto",
                                direction = "y",
                                force_pull = 0.2, force = 5) +
       ggrepel::geom_text_repel(data = data[data$var_labels == levels(data$var_labels)[2], ],
                                aes(label = ifelse(outcome_var < 5 & hide_small_values == FALSE, prop_labels, NA)),
                                position = position_stack(vjust = 0.5),
                                color = "#FFFFFF", segment.color = 'transparent',
-                               fontface = "bold", size = 4, family = "lato",
+                               fontface = "bold", size = 4, family = "roboto",
                                direction = "y",
                                force_pull = 0.2, force = 5) +
       ggrepel::geom_text_repel(data = data[data$var_labels == levels(data$var_labels)[3], ],
                                aes(label = ifelse(outcome_var < 5 & hide_small_values == FALSE, prop_labels, NA)),
                                position = position_stack(vjust = 0.5),
                                color = "#FFFFFF", segment.color = 'transparent',
-                               fontface = "bold", size = 4, family = "lato",
+                               fontface = "bold", size = 4, family = "roboto",
                                direction = "y",
                                force_pull = 0.2, force = 5) +
       ggrepel::geom_text_repel(data = data[data$var_labels == levels(data$var_labels)[4], ],
                                aes(label = ifelse(outcome_var < 5 & hide_small_values == FALSE, prop_labels, NA)),
                                position = position_stack(vjust = 0.5),
                                color = "#FFFFFF", segment.color = 'transparent',
-                               fontface = "bold", size = 4, family = "lato",
+                               fontface = "bold", size = 4, family = "roboto",
                                direction = "y",
                                force_pull = 0.2, force = 5) +
       coord_flip() +
@@ -133,7 +133,7 @@ kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data
            x = " ",
            caption = source_info,
            subtitle = subtitle) +
-      theme(text = element_text(size = 14, family = "lato"),
+      theme(text = element_text(size = 14, family = "roboto"),
             plot.title = element_text(size = 17, family = "nunito", face = "bold"),
             plot.caption = element_text(size = 10.5, hjust = 0.02, vjust = 2, family = "nunito", color="#585860"),
             plot.subtitle = element_text(size = 14, family = "nunito-light", color="#585860"),
@@ -142,13 +142,13 @@ kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data
             axis.text.y = element_text(margin=margin(r=0)),
             axis.ticks = element_blank(),
             # aspect.ratio = aspect_ratio,
-            axis.text = element_text(size = 14, family = "lato", color = "#585860", margin=margin(r=5)),
+            axis.text = element_text(size = 14, family = "roboto", color = "#585860", margin=margin(r=5)),
             panel.background = element_rect(fill = "white"),
             panel.grid = element_blank(),
             legend.position = "top",
             plot.title.position = "plot",
             plot.caption.position = "plot",
-            legend.text = element_text(family = "lato", color = "#585860"),
+            legend.text = element_text(family = "Playfair Display", color = "#585860"),
             legend.title = element_blank(),
             legend.justification='left',
             legend.key.size = unit(1, "line"),
@@ -175,22 +175,22 @@ kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data
            x = " ",
            caption = source_info,
            subtitle = subtitle) +
-      theme(text = element_text(size = 14, family = "lato"),
+      theme(text = element_text(size = 14, family = "roboto"),
             plot.title = element_text(size = 17, family = "nunito", face = "bold"),
-            plot.caption = element_text(size = 10.5, hjust = 0, vjust = 2, family = "lato-light", color="#585860"),
+            plot.caption = element_text(size = 10.5, hjust = 0, vjust = 2, family = "roboto-light", color="#585860"),
             plot.subtitle = element_text(size = 14, family = "nunito-light", color="#585860"),
             axis.title.y = element_blank(),
             axis.text.x = element_blank(),
             axis.text.y = element_text(margin=margin(r=0)),
             axis.ticks = element_blank(),
             # aspect.ratio = aspect_ratio,
-            axis.text = element_text(size = 14, family = "lato", color = "#585860", margin=margin(r=5)),
+            axis.text = element_text(size = 14, family = "roboto", color = "#585860", margin=margin(r=5)),
             panel.background = element_rect(fill = "white"),
             panel.grid = element_blank(),
             legend.position = "top",
             plot.title.position = "plot",
             plot.caption.position = "plot",
-            legend.text = element_text(family = "lato", color = "#585860"),
+            legend.text = element_text(family = "Playfair Display", color = "#585860"),
             legend.title = element_blank(),
             legend.justification='left',
             legend.key.size = unit(1, "line"),
