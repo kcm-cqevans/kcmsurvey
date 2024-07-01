@@ -34,7 +34,7 @@ svycollapse <- function(data, element_var = NULL, response_category = NULL, wgt 
       filter(!is.na(.data[[group_var]]), !is.na(.data[[element_var]]), !is.na(.data[[response_category]])) %>%
       as_survey_design(ids = 1, weights = .data[[wgt]]) %>%
       group_by(.data[[group_var]], .data[[element_var]], .data[[response_category]]) %>%
-      summarize(prop = 100 * survey_mean(variable = .data[[response_category]], na.rm = TRUE), .groups = 'drop') %>%
+      summarize(prop = 100 * survey_mean(variable = .data[[response_category]], na.rm = TRUE, vartype="ci"), .groups = 'drop') %>%
       #filter(.data[[response_category]] == 100 | .data[[response_category]] == 1) %>%
       mutate(proplabel = paste0(round(prop, 1), "%"))
   } else {
@@ -42,7 +42,7 @@ svycollapse <- function(data, element_var = NULL, response_category = NULL, wgt 
       filter(!is.na(.data[[element_var]]), !is.na(.data[[response_category]])) %>%
       as_survey_design(ids = 1, weights = .data[[wgt]]) %>%
       group_by(.data[[element_var]], .data[[response_category]]) %>%
-      summarize(prop = 100 * survey_mean(variable = .data[[response_category]], na.rm = TRUE), .groups = 'drop') %>%
+      summarize(prop = 100 * survey_mean(variable = .data[[response_category]], na.rm = TRUE, vartype="ci"), .groups = 'drop') %>%
       #filter(.data[[response_category]] == 100 | .data[[response_category]] == 1) %>%
       mutate(proplabel = paste0(round(prop, 1), "%"))
   }
