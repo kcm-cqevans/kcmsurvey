@@ -1,31 +1,36 @@
-#' Title
+#' KCM Survey Data - Bar Graph Visualization
 #'
-#' @param data
-#' @param outcome_var
-#' @param label_var
-#' @param cat_var
-#' @param ymin
-#' @param ymax
-#' @param lang
-#' @param main_title
-#' @param subtitle
-#' @param source_info
-#' @param order
-#' @param color_scheme
-#' @param horiz
+#' This function creates bar graphs for showing the distribution of responses -- both across single-response survey
+#' data questions as well as multiple select responses.
+#' @param data This is the datagram that will be used for the visualization. It should include columns for the category,
+#' as well as the proportion (prop) and the nicely labeled proportion (prop_label). Using the "svycollapse" function, you can
+#' create the data frame necessary to create all the variables.
+#' @param prop This is the proportion of responses that fall in the category. For categorical variables, it'll be the
+#' proportion of respondents that fit in each category (adding to 100%). For multiple select, you'll need to make sure to
+#' transpose to long form. Then, it'll be the proportion of respondents who selected yes or no.
+#' @param proplabel This is the same as the proportion, except with formatting and labeling appropriate for graphs.
+#' @param element_var This is the variable used for the axis -- the descriptive variable.
+#' @param ymin This is the minimum of the y-axis for the graph
+#' @param ymax This is the maximum of the y-axis for the graph
+#' @param main_title This is the main title of the grpah
+#' @param subtitle This is the subtitle of the graph (i.e indicating a subgroup or more description)
+#' @param source_info This is the source of the data for the graph. If it is for Q2 of 2023 Rider/Non-Rider - you can
+#' add source_info="Source: Rider/Non-Rider, Q2 2023"
+#' @param order This is specifying whether the order of the bars are in ascending or descending order.
+#' @param color_scheme Default color = #FDB71A
+#' @param horiz If horiz=TRUE, the graph bars are horizontal and y-axis = %. If horiz= FALSE, then graph is vertical with
+#' x axis = %.
 #' @import ggrepel
 #' @import ggtext
 #' @import ggplot2
 #' @import ggtext
-#' @return
+#' @return Pretty graph
 #' @export
 #'
-#' @examples
-kcmviz_bar<-function(data, outcome_var = data$prop, label_var = data$proplabel,
-         cat_var = data$element_var,
+kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
+         element_var = data$element_var,
          ymin = 0,
          ymax = 100,
-         lang = "en",
          main_title = "",
          subtitle = "",
          source_info = "",
@@ -34,21 +39,21 @@ kcmviz_bar<-function(data, outcome_var = data$prop, label_var = data$proplabel,
          horiz = TRUE){
   if(order == "ascend"){
     data = data[order(+data$prop), ]
-    cat_var = cat_var[order(+outcome_var)]
-    label_var = label_var[order(+outcome_var)]
-    outcome_var = outcome_var[order(+outcome_var)]
+    element_var = element_var[order(+prop)]
+    proplabel = proplabel[order(+prop)]
+    prop = prop[order(+prop)]
   }
   else if(order == "descend"){
     data = data[order(-data$prop), ]
-    cat_var = cat_var[order(-outcome_var)]
-    label_var = label_var[order(-outcome_var)]
-    outcome_var = outcome_var[order(-outcome_var)]
+    element_var = element_var[order(-prop)]
+    proplabel = proplabel[order(-prop)]
+    prop = prop[order(-prop)]
   }
   if(horiz==TRUE){
     update_geom_defaults("text", list(family = "inter"))
-    ggplot(data, aes(x=factor(cat_var, levels = cat_var), y = outcome_var)) +
+    ggplot(data, aes(x=factor(element_var, levels = element_var), y = prop)) +
       geom_bar(stat = "identity", color = color_scheme, fill = color_scheme, width = 0.75) +
-      geom_text(aes(label=label_var), vjust=-0.5, size = 6, fontface = "bold", color = color_scheme) +
+      geom_text(aes(label=proplabel), vjust=-0.5, size = 6, fontface = "bold", color = color_scheme) +
       scale_y_continuous(limits = c(ymin, ymax), expand = c(0, 0.3), labels = function(x) paste0(x, "%")) +
       scale_x_discrete(labels = function(x) str_wrap(x, width = 9)) +
       labs(title=main_title,
@@ -71,9 +76,9 @@ kcmviz_bar<-function(data, outcome_var = data$prop, label_var = data$proplabel,
   }
   else if(horiz==FALSE){
     update_geom_defaults("text", list(family = "inter"))
-    ggplot(data, aes(x=factor(cat_var, levels = cat_var), y = outcome_var)) +
+    ggplot(data, aes(x=factor(element_var, levels = element_var), y = prop)) +
       geom_bar(stat = "identity", color = color_scheme, fill = color_scheme, width = 0.75) +
-      geom_text(aes(label=label_var), vjust=0.5, hjust=-0.1, size = 6, fontface = "bold", color = color_scheme) +
+      geom_text(aes(label=proplabel), vjust=0.5, hjust=-0.1, size = 6, fontface = "bold", color = color_scheme) +
       scale_y_continuous(limits = c(ymin, ymax), expand = c(0, 0.3), labels = function(x) paste0(x, "%")) +
       scale_x_discrete(labels = function(x) str_wrap(x, width = 50)) +
       labs(title=main_title,
