@@ -20,6 +20,8 @@
 #' @param color_scheme Default color = #FDB71A
 #' @param horiz If horiz=TRUE, the graph bars are horizontal and y-axis = %. If horiz= FALSE, then graph is vertical with
 #' x axis = %.
+#' @param textsize_yaxis text size of x axis
+#' @param textsize_xaxis text size of y axis
 #' @import ggrepel
 #' @import ggtext
 #' @import ggplot2
@@ -36,7 +38,9 @@ kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
          source_info = "",
          order = "ascend",
          color_scheme = "#FDB71A",
-         horiz = TRUE){
+         horiz = TRUE,
+         textsize_yaxis = 16,
+         textsize_xaxis=16){
   if(order == "ascend"){
     data = data[order(+data$prop), ]
     element_var = element_var[order(+prop)]
@@ -69,7 +73,8 @@ kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
             plot.title.position = "plot",
             plot.caption.position = "plot",
             axis.ticks = element_blank(),
-            axis.text = element_text(size = 20, family = "inter-light", color = "black"),
+            axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
+            axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
             panel.grid = element_blank(),
             panel.background = element_rect(fill = "white"),
             panel.grid.major.x = element_blank())
@@ -86,7 +91,7 @@ kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
            x = "",
            caption = source_info,
            subtitle = subtitle) +
-      theme(text = element_text(size = 18, family = "inter"),
+      theme(text = element_text(size = 16, family = "inter"),
             plot.title = element_text(size = 24, family = "inter", face = "bold"),
             plot.caption = element_text(size = 16, hjust = 0.02, vjust = 2, family = "inter", color="#585860"),
             plot.subtitle = element_text(size = 18, family = "inter-light", color="#242424"),
@@ -94,7 +99,8 @@ kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
             plot.title.position = "plot",
             plot.caption.position = "plot",
             axis.ticks = element_blank(),
-            axis.text = element_text(size = 20, family = "inter-light", color = "black"),
+            axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
+            axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
             panel.grid = element_blank(),
             panel.background = element_rect(fill = "white"),
             panel.grid.major.x = element_blank()) + coord_flip()}

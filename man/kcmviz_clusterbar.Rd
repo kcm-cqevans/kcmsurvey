@@ -24,11 +24,53 @@ kcmviz_clusterbar(
   color_scheme = c("#D67619", "#264d5e", "#006848", "#4B2884", "#FDB71A", "#784885",
     "#a43d6a"),
   label_size = 4.25,
-  text_position = 0.75
+  text_position = 0.75,
+  textsize_yaxis = 16,
+  textsize_xaxis = 16
 )
 }
 \arguments{
-\item{text_position}{}
+\item{data}{data frame}
+
+\item{element_var}{description variable}
+
+\item{outcome_var}{the variable we are showing}
+
+\item{lower_bound}{lower bound}
+
+\item{upper_bound}{upper bound}
+
+\item{label_var}{the label variation}
+
+\item{groupby_var}{grouping by var}
+
+\item{ymin}{minimum of y axis}
+
+\item{ymax}{maximum of y axis}
+
+\item{main_title}{main title}
+
+\item{source_info}{info of source}
+
+\item{subtitle}{subtitle}
+
+\item{sort}{sorting}
+
+\item{horiz}{horizontal true}
+
+\item{y_label}{labeling graph}
+
+\item{x_label}{labeling graph x}
+
+\item{color_scheme}{colors choosing}
+
+\item{label_size}{size of labels on top of bars}
+
+\item{text_position}{size of text on top of bars}
+
+\item{textsize_yaxis}{size of y axis}
+
+\item{textsize_xaxis}{size of x axis}
 }
 \value{
 A nice pretty graph

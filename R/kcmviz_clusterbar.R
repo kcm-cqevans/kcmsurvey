@@ -2,46 +2,50 @@
 
 #' Title
 #'
-#' @param data
-#' @param element_var
-#' @param outcome_var
-#' @param lower_bound
-#' @param upper_bound
-#' @param label_var
-#' @param groupby_var
-#' @param ymin
-#' @param ymax
-#' @param main_title
-#' @param source_info
-#' @param subtitle
-#' @param sort
-#' @param horiz
-#' @param y_label
-#' @param x_label
-#' @param color_scheme
-#' @param label_size
-#' @param text_position
+#' @param data data frame
+#' @param element_var description variable
+#' @param outcome_var the variable we are showing
+#' @param lower_bound lower bound
+#' @param upper_bound upper bound
+#' @param label_var the label variation
+#' @param groupby_var grouping by var
+#' @param ymin minimum of y axis
+#' @param ymax maximum of y axis
+#' @param main_title main title
+#' @param source_info info of source
+#' @param subtitle subtitle
+#' @param sort sorting
+#' @param horiz horizontal true
+#' @param y_label labeling graph
+#' @param x_label labeling graph x
+#' @param color_scheme colors choosing
+#' @param label_size size of labels on top of bars
+#' @param text_position size of text on top of bars
+#' @param textsize_yaxis size of y axis
+#' @param textsize_xaxis size of x axis
 #'
 #' @return A nice pretty graph
 #' @export
 #'
 
 kcmviz_clusterbar<- function(data,
-                           element_var = data$element_var, outcome_var = data$prop,
-                           lower_bound = data$prop_low, upper_bound = data$prop_upp,
-                           label_var = data$proplabel, groupby_var = data$groupby_var,
-                           ymin = 0,
-                           ymax = 100,
-                           main_title = "",
-                           source_info = "",
-                           subtitle = "",
-                           sort = "",
-                           horiz=TRUE,
-                           y_label = "",
-                           x_label = "",
-                           color_scheme = c("#D67619", "#264d5e", "#006848", "#4B2884", "#FDB71A", "#784885", "#a43d6a"),
-                           label_size = 4.25,
-                           text_position = 0.75){
+                              element_var = data$element_var, outcome_var = data$prop,
+                              lower_bound = data$prop_low, upper_bound = data$prop_upp,
+                              label_var = data$proplabel, groupby_var = data$groupby_var,
+                              ymin = 0,
+                              ymax = 100,
+                              main_title = "",
+                              source_info = "",
+                              subtitle = "",
+                              sort = "",
+                              horiz=TRUE,
+                              y_label = "",
+                              x_label = "",
+                              color_scheme = c("#D67619", "#264d5e", "#006848", "#4B2884", "#FDB71A", "#784885", "#a43d6a"),
+                              label_size = 4.25,
+                              text_position = 0.75,
+                              textsize_yaxis = 16,
+                              textsize_xaxis=16){
   fill_colors = paste0(color_scheme, "")
   if(sort == "group1"){
     data = data %>%
@@ -84,8 +88,8 @@ kcmviz_clusterbar<- function(data,
             panel.background = element_blank(),
             panel.border = element_blank(),
             axis.line.x = element_line(linewidth = 0.6, linetype = "solid", colour = "#dddddf"),
-            axis.text = element_text(size = 20, family = "inter-light", color = "black"),
-            axis.text.y = element_blank(),
+            axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
+            axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
             axis.ticks = element_blank(),
             legend.position = "top",
             plot.title.position = "plot",
@@ -118,55 +122,19 @@ kcmviz_clusterbar<- function(data,
             panel.background = element_blank(),
             panel.border = element_blank(),
             axis.line.x = element_line(linewidth = 0.6, linetype = "solid", colour = "#dddddf"),
-            axis.text = element_text(size = 16, family = "inter-light", color = "black"),
+            axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
+            axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
             #axis.text.y = element_blank(),
             axis.ticks = element_blank(),
-            legend.position = c(1.1,-0.2),             # try c(y,x) instead of named position. i.e. c(1.1,-0.2)
             plot.title.position = "plot",
             plot.caption.position = "plot",
+            legend.position = "top",
             legend.title = element_blank(),
             legend.justification='left',
-            legend.margin = margin(t=0, b=0),
-            legend.text = element_markdown(family = "inter-light", size=15)) + coord_flip() }
+            legend.margin = margin(t=0, b=0, l=0, r=0),
+            legend.text = element_markdown(family = "inter-light", size=15)) + coord_flip(expand=TRUE) }
 }
 
 
 
 
-
-svyreshape_long <- function(data, pivot_cols = NULL, not_pivot_cols = NULL, drop_cols = NULL, drop_na = FALSE) {
-  # Validate parameters
-  if (!is.null(pivot_cols) && !is.null(not_pivot_cols)) {
-    stop("Specify either pivot_cols or not_pivot_cols, not both.")
-  }
-
-  if (is.null(pivot_cols) && is.null(not_pivot_cols)) {
-    stop("At least one of pivot_cols or not_pivot_cols must be provided.")
-  }
-
-  if (!is.null(drop_cols)) {
-    if (!all(drop_cols %in% names(data))) {
-      stop("All drop_cols must be column names in data.")
-    }
-    # Drop specified columns
-    data <- select(data, -all_of(drop_cols))
-  }
-
-  cols_to_pivot <- if (!is.null(not_pivot_cols)) {
-    setdiff(names(data), not_pivot_cols)
-  } else {
-    pivot_cols
-  }
-
-  # Reshape the data
-  data_long <- data %>%
-    pivot_longer(cols = all_of(cols_to_pivot), names_to = "element_var", values_to = "response_category") %>%
-    as.data.frame()
-
-  if (drop_na) {
-    # Drop rows with NA in 'response' after reshaping
-    data_long <- data_long %>% filter(!is.na(response))
-  }
-
-  return(data_long)
-}

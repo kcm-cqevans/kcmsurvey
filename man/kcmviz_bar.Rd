@@ -16,7 +16,9 @@ kcmviz_bar(
   source_info = "",
   order = "ascend",
   color_scheme = "#FDB71A",
-  horiz = TRUE
+  horiz = TRUE,
+  textsize_yaxis = 16,
+  textsize_xaxis = 16
 )
 }
 \arguments{
@@ -49,6 +51,10 @@ add source_info="Source: Rider/Non-Rider, Q2 2023"}
 
 \item{horiz}{If horiz=TRUE, the graph bars are horizontal and y-axis = \%. If horiz= FALSE, then graph is vertical with
 x axis = \%.}
+
+\item{textsize_yaxis}{text size of x axis}
+
+\item{textsize_xaxis}{text size of y axis}
 }
 \value{
 Pretty graph
