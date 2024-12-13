@@ -76,8 +76,7 @@ kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
             axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
             axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
             panel.grid = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            panel.grid.major.x = element_blank())
+            panel.background = element_rect(fill = "white"))
   }
   else if(horiz==FALSE){
     update_geom_defaults("text", list(family = "inter"))
@@ -102,7 +101,6 @@ kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
             axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
             axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
             panel.grid = element_blank(),
-            panel.background = element_rect(fill = "white"),
-            panel.grid.major.x = element_blank()) + coord_flip()}
+            panel.background = element_rect(fill = "white")) + coord_flip()}
 
 }
