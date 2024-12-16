@@ -30,17 +30,17 @@
 #' @export
 #'
 kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
-         element_var = data$element_var,
-         ymin = 0,
-         ymax = 100,
-         main_title = "",
-         subtitle = "",
-         source_info = "",
-         order = "ascend",
-         color_scheme = "#FDB71A",
-         horiz = TRUE,
-         textsize_yaxis = 16,
-         textsize_xaxis=16){
+                      element_var = data$element_var,
+                      ymin = 0,
+                      ymax = 100,
+                      main_title = "",
+                      subtitle = "",
+                      source_info = "",
+                      order = "ascend",
+                      color_scheme = "#FDB71A",
+                      horiz = TRUE,
+                      textsize_yaxis = 16,
+                      textsize_xaxis=16){
   if(order == "ascend"){
     data = data[order(+data$prop), ]
     element_var = element_var[order(+prop)]
@@ -69,13 +69,14 @@ kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
             plot.title = element_text(size = 24, family = "inter", face = "bold"),
             plot.caption = element_text(size = 16, hjust = 0.02, vjust = 2, family = "inter", color="#585860"),
             plot.subtitle = element_text(size = 18, family = "inter-light", color="#242424"),
-            axis.title.y = element_blank(),
+            axis.line = element_line(size=0.5, color="black"),
+            #axis.title.y = element_blank(),
             plot.title.position = "plot",
             plot.caption.position = "plot",
-            axis.ticks = element_blank(),
+            #axis.ticks = element_blank(),
             axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
             axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
-            panel.grid = element_blank(),
+            #panel.grid = element_blank(),
             panel.background = element_rect(fill = "white"))
   }
   else if(horiz==FALSE){
@@ -94,13 +95,14 @@ kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
             plot.title = element_text(size = 24, family = "inter", face = "bold"),
             plot.caption = element_text(size = 16, hjust = 0.02, vjust = 2, family = "inter", color="#585860"),
             plot.subtitle = element_text(size = 18, family = "inter-light", color="#242424"),
-            axis.title.y = element_blank(),
+            #axis.title.y = element_blank(),
+            axis.line = element_line(size=0.5, color="black"),
             plot.title.position = "plot",
             plot.caption.position = "plot",
-            axis.ticks = element_blank(),
+            # axis.ticks = element_blank(),
             axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
             axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
-            panel.grid = element_blank(),
+            #panel.grid = element_blank(),
             panel.background = element_rect(fill = "white")) + coord_flip()}
 
 }
