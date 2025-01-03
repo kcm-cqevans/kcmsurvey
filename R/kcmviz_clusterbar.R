@@ -83,7 +83,7 @@ kcmviz_clusterbar<- function(data,
            caption = source_info) +
       {if(subtitle != "")labs(subtitle = subtitle)}+
       theme(text = element_text(size = 20, family = "inter"),
-            plot.title = element_text(size = 20, family = "inter", face = "bold"),
+            plot.title = element_text(size = 16, family = "inter", face = "bold"),
             plot.caption = element_text(size = 16, vjust = 2, hjust = 0.02, family = "inter", color="#585860"),
             panel.background = element_blank(),
             panel.border = element_blank(),
@@ -121,7 +121,7 @@ kcmviz_clusterbar<- function(data,
            caption = source_info) +
       {if(subtitle != "")labs(subtitle = subtitle)}+
       theme(text = element_text(size = 20, family = "inter"),
-            plot.title = element_text(size = 20, family = "inter", face = "bold"),
+            plot.title = element_text(size = 16, family = "inter", face = "bold"),
             plot.caption = element_text(size = 16, vjust = 2, hjust = 0.02, family = "inter", color="#585860"),
             panel.background = element_blank(),
             panel.border = element_blank(),
