@@ -21,7 +21,7 @@ kcmviz_clusterbar(
   horiz = TRUE,
   y_label = "",
   x_label = "",
-  color_scheme = c("#D67619", "#264d5e", "#006848", "#4B2884", "#FDB71A", "#784885",
+  color_scheme = c("#D67619", "#006848", "#4B2884", "#FDB71A", "#264d5e", "#784885",
     "#a43d6a"),
   label_size = 4.25,
   text_position = 0.75,
