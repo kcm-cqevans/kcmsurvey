@@ -30,3 +30,7 @@
 #' @rdname barrier2024_rename
 #' @format NULL
 "barrier2024_rename"
+
+#' @rdname satisfaction_rename2024
+#' @format NULL
+"satisfaction_rename2024"
