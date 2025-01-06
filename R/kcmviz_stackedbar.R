@@ -46,7 +46,8 @@ kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data
     color_schemes <- list(
       "agree_dis5" = c("#FF0000", "#FF6666",  "#FFCC33", "#338585", "#006666"),
       "agree_dis4" = c("#FF0000", "#FF6666",  "#338585", "#006666"),
-      "categorical" = c("#2D708E", "#008381", "#C74E49", "#784885", "#a43d6a","#202020")
+      "categorical" = c("#2D708E", "#008381", "#C74E49", "#784885", "#a43d6a","#202020"),
+      "continuous" = c("#125A56",  "#00767B", "#238F9D", "#42A7C6","#FD9A44","#F57634","#E94C1F", "#555555")
     )
 
     # Select color scheme based on input
