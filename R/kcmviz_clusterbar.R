@@ -1,6 +1,7 @@
 
 
-#' Title
+#' KCM Data Vizualization - Clustered Bar Chart
+#' Description for showing proportions of an X variable across group Z
 #'
 #' @param data data frame
 #' @param element_var description variable

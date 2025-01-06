@@ -2,7 +2,8 @@
 % Please edit documentation in R/kcmviz_clusterbar.R
 \name{kcmviz_clusterbar}
 \alias{kcmviz_clusterbar}
-\title{Title}
+\title{KCM Data Vizualization - Clustered Bar Chart
+Description for showing proportions of an X variable across group Z}
 \usage{
 kcmviz_clusterbar(
   data,
@@ -76,5 +77,6 @@ kcmviz_clusterbar(
 A nice pretty graph
 }
 \description{
-Title
+KCM Data Vizualization - Clustered Bar Chart
+Description for showing proportions of an X variable across group Z
 }
