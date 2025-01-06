@@ -34,3 +34,13 @@
 #' @rdname satisfaction_rename2024
 #' @format NULL
 "satisfaction_rename2024"
+
+#' @rdname todtravel_2023
+#' @format NULL
+"todtravel_2023"
+
+#' @rdname todtravel_2024
+#' @format NULL
+"todtravel_2024"
+
+
