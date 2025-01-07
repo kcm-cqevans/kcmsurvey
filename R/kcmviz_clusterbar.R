@@ -1,38 +1,39 @@
 
 
-#' KCM Data Vizualization - Clustered Bar Chart
-#' Description for showing proportions of an X variable across group Z
+#' KCM Data Visualization - Clustered Bar Chart
+#' For showing proportions of an X variable across group Z.
+#' For example, you might might to show the proportion of people who cite each barrier to transit use across their rider status.
 #'
-#' @param data data frame
-#' @param element_var description variable
-#' @param outcome_var the variable we are showing
-#' @param lower_bound lower bound
-#' @param upper_bound upper bound
-#' @param label_var the label variation
-#' @param groupby_var grouping by var
-#' @param ymin minimum of y axis
-#' @param ymax maximum of y axis
-#' @param main_title main title
-#' @param source_info info of source
-#' @param subtitle subtitle
-#' @param sort sorting
-#' @param horiz horizontal true
-#' @param y_label labeling graph
-#' @param x_label labeling graph x
-#' @param color_scheme colors choosing
+#' @param data Data frame that you are referencing
+#' @param element_var The axis variable, in the example above - this will be the column that holds all of the barrier types.
+#' @param lower_bound lower bound of confidence intervals
+#' @param upper_bound upper bound of confidence intervals
+#' @param prop This is the calculated proportion, without formatting for display
+#' @param proplabel The labelled proportion variable. This is the actual value you will be displaying, ideally in format XX.X%
+#' @param groupby_var This is the grouping variable. In the example above, this will be rider status.
+#' @param ymin Value 0-100 where you want you graph axis to start, can be left blank
+#' @param ymax Value 0-100 where you want you graph axis to end, can be left blank
+#' @param main_title Title of your graph, goes top left
+#' @param source_info Source information, goes bottom left. Example "Source: Rider/Non-Rider 2024"
+#' @param subtitle Subtitle - if applicable.
+#' @param sort Sort - the way you want to order bars -- default is alphabetically.
+#' @param horiz Do you want your graph to be horizontal (i.e., with bars that go up and down)? Or graph to be vertical (so that bars goes left to right?)
+#' @param y_label Label for Y axis
+#' @param x_label Label for X axis
+#' @param color_scheme Color choices, you can specify as "color_scheme=c(#color, #color)" or you can use the default colors.
 #' @param label_size size of labels on top of bars
-#' @param text_position size of text on top of bars
-#' @param textsize_yaxis size of y axis
-#' @param textsize_xaxis size of x axis
+#' @param text_position position of text on top of bars
+#' @param textsize_yaxis Text size of y axis
+#' @param textsize_xaxis Text size of x axis
 #'
 #' @return A nice pretty graph
 #' @export
 #'
 
 kcmviz_clusterbar<- function(data,
-                             element_var = data$element_var, outcome_var = data$prop,
+                             element_var = data$element_var, prop = data$prop
                              lower_bound = data$prop_low, upper_bound = data$prop_upp,
-                             label_var = data$proplabel, groupby_var = data$groupby_var,
+                             proplabel = data$proplabel, groupby_var = data$groupby_var,
                              ymin = 0,
                              ymax = 100,
                              main_title = "",
@@ -70,7 +71,7 @@ kcmviz_clusterbar<- function(data,
     update_geom_defaults("text", list(family = "inter"))
     ggplot(data=data, aes(x=factor(element_var, levels = unique(element_var)), y=prop, fill = groupby_var, color = groupby_var)) +
       geom_bar(position = "dodge", stat="identity", width = 0.75) +
-      geom_text(aes(label=label_var, y = prop, group = groupby_var),
+      geom_text(aes(label=proplabel, y = prop, group = groupby_var),
                 position = position_dodge(width = text_position),
                 vjust=-.5, size = label_size, fontface = "bold",
                 show.legend = FALSE) +
@@ -108,7 +109,7 @@ kcmviz_clusterbar<- function(data,
     update_geom_defaults("text", list(family = "inter"))
     ggplot(data=data, aes(x=factor(element_var, levels = unique(element_var)), y=prop, fill = groupby_var, color = groupby_var)) +
       geom_bar(position = "dodge", stat="identity", width = 0.75) +
-      geom_text(aes(label=label_var, y = prop, group = groupby_var),
+      geom_text(aes(label=proplabel, y = prop, group = groupby_var),
                 position = position_dodge(width = text_position),
                 hjust=-.05, size = label_size, fontface = "bold",
                 show.legend = FALSE) +
