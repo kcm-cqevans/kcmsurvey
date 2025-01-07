@@ -2,16 +2,17 @@
 % Please edit documentation in R/kcmviz_clusterbar.R
 \name{kcmviz_clusterbar}
 \alias{kcmviz_clusterbar}
-\title{KCM Data Vizualization - Clustered Bar Chart
-Description for showing proportions of an X variable across group Z}
+\title{KCM Data Visualization - Clustered Bar Chart
+For showing proportions of an X variable across group Z.
+For example, you might might to show the proportion of people who cite each barrier to transit use across their rider status.}
 \usage{
 kcmviz_clusterbar(
   data,
   element_var = data$element_var,
-  outcome_var = data$prop,
+  prop = data$prop,
   lower_bound = data$prop_low,
   upper_bound = data$prop_upp,
-  label_var = data$proplabel,
+  proplabel = data$proplabel,
   groupby_var = data$groupby_var,
   ymin = 0,
   ymax = 100,
@@ -31,52 +32,53 @@ kcmviz_clusterbar(
 )
 }
 \arguments{
-\item{data}{data frame}
+\item{data}{Data frame that you are referencing}
 
-\item{element_var}{description variable}
+\item{element_var}{The axis variable, in the example above - this will be the column that holds all of the barrier types.}
 
-\item{outcome_var}{the variable we are showing}
+\item{prop}{This is the calculated proportion, without formatting for display}
 
-\item{lower_bound}{lower bound}
+\item{lower_bound}{lower bound of confidence intervals}
 
-\item{upper_bound}{upper bound}
+\item{upper_bound}{upper bound of confidence intervals}
 
-\item{label_var}{the label variation}
+\item{proplabel}{The labelled proportion variable. This is the actual value you will be displaying, ideally in format XX.X\%}
 
-\item{groupby_var}{grouping by var}
+\item{groupby_var}{This is the grouping variable. In the example above, this will be rider status.}
 
-\item{ymin}{minimum of y axis}
+\item{ymin}{Value 0-100 where you want you graph axis to start, can be left blank}
 
-\item{ymax}{maximum of y axis}
+\item{ymax}{Value 0-100 where you want you graph axis to end, can be left blank}
 
-\item{main_title}{main title}
+\item{main_title}{Title of your graph, goes top left}
 
-\item{source_info}{info of source}
+\item{source_info}{Source information, goes bottom left. Example "Source: Rider/Non-Rider 2024"}
 
-\item{subtitle}{subtitle}
+\item{subtitle}{Subtitle - if applicable.}
 
-\item{sort}{sorting}
+\item{sort}{Sort - the way you want to order bars -- default is alphabetically.}
 
-\item{horiz}{horizontal true}
+\item{horiz}{Do you want your graph to be horizontal (i.e., with bars that go up and down)? Or graph to be vertical (so that bars goes left to right?)}
 
-\item{y_label}{labeling graph}
+\item{y_label}{Label for Y axis}
 
-\item{x_label}{labeling graph x}
+\item{x_label}{Label for X axis}
 
-\item{color_scheme}{colors choosing}
+\item{color_scheme}{Color choices, you can specify as "color_scheme=c(#color, #color)" or you can use the default colors.}
 
 \item{label_size}{size of labels on top of bars}
 
-\item{text_position}{size of text on top of bars}
+\item{text_position}{position of text on top of bars}
 
-\item{textsize_yaxis}{size of y axis}
+\item{textsize_yaxis}{Text size of y axis}
 
-\item{textsize_xaxis}{size of x axis}
+\item{textsize_xaxis}{Text size of x axis}
 }
 \value{
 A nice pretty graph
 }
 \description{
-KCM Data Vizualization - Clustered Bar Chart
-Description for showing proportions of an X variable across group Z
+KCM Data Visualization - Clustered Bar Chart
+For showing proportions of an X variable across group Z.
+For example, you might might to show the proportion of people who cite each barrier to transit use across their rider status.
 }

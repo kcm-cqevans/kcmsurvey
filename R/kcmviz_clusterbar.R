@@ -31,7 +31,7 @@
 #'
 
 kcmviz_clusterbar<- function(data,
-                             element_var = data$element_var, prop = data$prop
+                             element_var = data$element_var, prop = data$prop,
                              lower_bound = data$prop_low, upper_bound = data$prop_upp,
                              proplabel = data$proplabel, groupby_var = data$groupby_var,
                              ymin = 0,
