@@ -10,8 +10,7 @@ svycollapse(
   response_category = NULL,
   wgt = NULL,
   groupby_var = NULL,
-  data_shape = NULL,
-  dv_variabletype = NULL
+  binary_response_category = FALSE
 )
 }
 \arguments{
