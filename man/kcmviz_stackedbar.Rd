@@ -22,7 +22,8 @@ kcmviz_stackedbar(
   legendnrow = 1,
   color_scheme = NULL,
   colors = NULL,
-  textsize_xaxis = 16
+  textsize_xaxis = 16,
+  textsize_yaxis = 16
 )
 }
 \arguments{

@@ -23,20 +23,21 @@
 #' @return A ggplot object representing the agreement visualization.
 #' @export
 kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data$proplabel,
-                                 var_labels = data$element_var, value_labels = data$response_category,
-                                 main_title = "",
-                                 subtitle = "",
-                                 source_info = "",
-                                 rev_values = FALSE,
-                                 rev_variables = FALSE,
-                                 hide_small_values = TRUE,
-                                 order_bars = FALSE,
-                                 subtitle_h_just = 0,
-                                 fixed_aspect_ratio = TRUE,
-                                 legendnrow = 1,
-                                 color_scheme = NULL,
-                                 colors=NULL,
-                                textsize_xaxis=16){
+                               var_labels = data$element_var, value_labels = data$response_category,
+                               main_title = "",
+                               subtitle = "",
+                               source_info = "",
+                               rev_values = FALSE,
+                               rev_variables = FALSE,
+                               hide_small_values = TRUE,
+                               order_bars = FALSE,
+                               subtitle_h_just = 0,
+                               fixed_aspect_ratio = TRUE,
+                               legendnrow = 1,
+                               color_scheme = NULL,
+                               colors=NULL,
+                               textsize_xaxis=16,
+                               textsize_yaxis=16  ){
 
   if (!is.null(colors)) {
     # Use custom colors if provided
@@ -46,166 +47,54 @@ kcmviz_stackedbar <-  function(data, outcome_var = data$prop, prop_labels = data
     color_schemes <- list(
       "agree_dis5" = c("#FF0000", "#FF6666",  "#FFCC33", "#338585", "#006666"),
       "agree_dis4" = c("#FF0000", "#FF6666",  "#338585", "#006666"),
-      "categorical" = c("#2D708E", "#008381", "#C74E49", "#784885", "#a43d6a","#202020"),
+      "categorical" = c("#D67619",  "#006848", "#4B2884", "#FDB71A", "#264d5e"),
       "continuous" = c("#125A56",  "#00767B", "#238F9D", "#42A7C6","#FD9A44","#F57634","#E94C1F", "#555555")
     )
-
     # Select color scheme based on input
     colors <- color_schemes[[color_scheme]]
   } else {
     stop("Either 'colors' or 'color_scheme' must be provided.") }
-
-
-   if(!inherits(var_labels, "character") & !inherits(var_labels, "factor")){
-    var_labels = as.character(var_labels)
-    data$element_vars = as.character(data$element_var)
-  }
-  if(!inherits(value_labels, "character") & !inherits(value_labels, "factor")){
-    value_labels = as.character(value_labels)
-    data$response_category = as.character(data$response_category)
-  }
-
-  mycolors = rev(colors[seq_along(unique(value_labels))])
-
-  if(rev_values == TRUE){
-    value_labels = factor(value_labels, levels = unique(value_labels))
-  } else{
-    value_labels = factor(value_labels, levels = rev(unique(value_labels)))
-  }
-  positions = rev(unique(var_labels))
-  update_geom_defaults("text", list(family = "roboto"))
-  if(order_bars == TRUE){
-    var_labels = factor(var_labels, levels = unique(var_labels))
-    data = data.frame(var_labels, value_labels, outcome_var, prop_labels)
-    ggplot(data, aes(y = outcome_var, x = var_labels,
-                     fill = reorder(value_labels, outcome_var), label = prop_labels)) +
-      geom_bar(position = "stack", stat = "identity", width = 0.6, data = data[data$var_labels == levels(data$var_labels)[1], ]) +
-      geom_bar(position = "stack", stat = "identity", width = 0.6, data = data[data$var_labels == levels(data$var_labels)[2], ]) +
-      geom_bar(position = "stack", stat = "identity", width = 0.6, data = data[data$var_labels == levels(data$var_labels)[3], ]) +
-      geom_text(data = data[data$var_labels == levels(data$var_labels)[1], ],
-                aes(label = prop_labels),
-                position = position_stack(vjust = 0.5), color = "#FFFFFF",
-                fontface = "bold", size = 5) +
-      geom_text(data = data[data$var_labels == levels(data$var_labels)[2], ],
-                aes(label = ifelse(outcome_var >= 5, prop_labels, NA)),
-                position = position_stack(vjust = 0.5), color = "#FFFFFF",
-                fontface = "bold", size = 5) +
-      geom_text(data = data[data$var_labels == levels(data$var_labels)[3], ],
-                aes(label = ifelse(outcome_var >= 5, prop_labels, NA)),
-                position = position_stack(vjust = 0.5), color = "#FFFFFF",
-                fontface = "bold", size = 5) +
-      geom_text(data = data[data$var_labels == levels(data$var_labels)[4], ],
-                aes(label = ifelse(outcome_var >= 5, prop_labels, NA)),
-                position = position_stack(vjust = 0.5), color = "#FFFFFF",
-                fontface = "bold", size = 5) +
-      ggrepel::geom_text_repel(data = data[data$var_labels == levels(data$var_labels)[1], ],
-                               aes(label = ifelse(outcome_var < 5 & hide_small_values == FALSE, prop_labels, NA)),
-                               position = position_stack(vjust = 0.5),
-                               color = "#FFFFFF", segment.color = 'transparent',
-                               fontface = "bold", size = 4, family = "roboto",
-                               direction = "y",
-                               force_pull = 0.2, force = 5) +
-      ggrepel::geom_text_repel(data = data[data$var_labels == levels(data$var_labels)[2], ],
-                               aes(label = ifelse(outcome_var < 5 & hide_small_values == FALSE, prop_labels, NA)),
-                               position = position_stack(vjust = 0.5),
-                               color = "#FFFFFF", segment.color = 'transparent',
-                               fontface = "bold", size = 4, family = "roboto",
-                               direction = "y",
-                               force_pull = 0.2, force = 5) +
-      ggrepel::geom_text_repel(data = data[data$var_labels == levels(data$var_labels)[3], ],
-                               aes(label = ifelse(outcome_var < 5 & hide_small_values == FALSE, prop_labels, NA)),
-                               position = position_stack(vjust = 0.5),
-                               color = "#FFFFFF", segment.color = 'transparent',
-                               fontface = "bold", size = 4, family = "roboto",
-                               direction = "y",
-                               force_pull = 0.2, force = 5) +
-      ggrepel::geom_text_repel(data = data[data$var_labels == levels(data$var_labels)[4], ],
-                               aes(label = ifelse(outcome_var < 5 & hide_small_values == FALSE, prop_labels, NA)),
-                               position = position_stack(vjust = 0.5),
-                               color = "#FFFFFF", segment.color = 'transparent',
-                               fontface = "bold", size = 4, family = "roboto",
-                               direction = "y",
-                               force_pull = 0.2, force = 5) +
-      coord_flip() +
-      scale_fill_manual(values = mycolors, guide=guide_legend(reverse = TRUE, nrow = legendnrow)) +
-      scale_x_discrete(limits = positions, expand = c(0, 0)) +
-      scale_y_continuous(expand = c(0.02, 0)) +
-      labs(title = main_title,
-           y = "",
-           x = " ",
-           caption = source_info,
-           subtitle = subtitle) +
-      theme(text = element_text(size = 14, family = "roboto"),
-            plot.title = element_text(size = 17, family = "nunito", face = "bold"),
-            plot.caption = element_text(size = 10.5, hjust = 0.02, vjust = 2, family = "nunito", color="#36454F"),
-            plot.subtitle = element_text(size = 14, family = "nunito-light", color="#36454F"),
-            axis.title.y = element_blank(),
-            #axis.text.x = element_blank(),
-            axis.line.x = element_line(linewidth = 0.6, linetype = "solid", colour = "black"),
-            axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
-            axis.text.y = element_text(margin=margin(r=0)),
-            # aspect.ratio = aspect_ratio,
-            axis.text = element_text(size = 14, family = "roboto", color = "#36454F", margin=margin(r=5)),
-            panel.background = element_rect(fill = "white"),
-            panel.grid = element_blank(),
-            panel.grid.major.x = element_line(color = "#585860",
-                                              size = 0.35,
-                                              linetype = 2),
-            legend.position = "top",
-            plot.title.position = "plot",
-            plot.caption.position = "plot",
-            legend.text = element_text(family = "Playfair Display", color = "#36454F"),
-            legend.title = element_blank(),
-            legend.justification='left',
-            legend.key.size = unit(1, "line"),
-            legend.margin = margin(t=5,b=5, 0, subtitle_h_just)) +
-      {if(fixed_aspect_ratio)theme(aspect.ratio = 0.35)}
-  } else{
-    ggplot(data, aes(fill = value_labels, y = outcome_var, x = var_labels, label = prop_labels)) +
-      geom_bar(position = "stack", stat = "identity", width = 0.6) +
-      geom_text(label = ifelse(outcome_var >= 5, prop_labels, NA),
-                position = position_stack(vjust = 0.5), color = "#FFFFFF",
-                fontface = "bold", size = 5) +
-      ggrepel::geom_text_repel(label = ifelse(outcome_var < 5 & hide_small_values == FALSE, prop_labels, NA),
-                               position = position_stack(vjust = 0.5),
-                               color = "#FFFFFF", segment.color = 'transparent',
-                               fontface = "bold", size = 4, family = "nunito",
-                               direction = "y",
-                               force_pull = 0.2, force = 5) +
-      coord_flip() +
-      scale_fill_manual(values = mycolors, guide=guide_legend(reverse = TRUE)) +
-      scale_x_discrete(limits = positions, expand = c(0, 0)) +
-      scale_y_continuous(expand = c(0.02, 0)) +
-      labs(title = main_title,
-           y = "",
-           x = " ",
-           caption = source_info,
-           subtitle = subtitle) +
-      theme(text = element_text(size = 14, family = "roboto"),
-            plot.title = element_text(size = 17, family = "nunito", face = "bold"),
-            plot.caption = element_text(size = 10.5, hjust = 0, vjust = 2, family = "roboto-light", color="#36454F"),
-            plot.subtitle = element_text(size = 14, family = "nunito-light", color="#36454F"),
-            axis.title.y = element_blank(),
-            #axis.text.x = element_blank(),
-            axis.line.x = element_line(linewidth = 0.6, linetype = "solid", colour = "black"),
-            axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
-            axis.text.y = element_text(margin=margin(r=0)),
-            axis.ticks = element_blank(),
-            # aspect.ratio = aspect_ratio,
-            axis.text = element_text(size = 14, family = "roboto", color = "#36454F", margin=margin(r=5)),
-            panel.background = element_rect(fill = "white"),
-            panel.grid = element_blank(),
-            panel.grid.major.x = element_line(color = "#585860",
-                                              size = 0.35,
-                                              linetype = 2),
-            legend.position = "top",
-            plot.title.position = "plot",
-            plot.caption.position = "plot",
-            legend.text = element_text(family = "Playfair Display", color = "#36454F"),
-            legend.title = element_blank(),
-            legend.justification='left',
-            legend.key.size = unit(1, "line"),
-            legend.margin = margin(t=5,b=5, 0, subtitle_h_just)) +
-      {if(fixed_aspect_ratio)theme(aspect.ratio = 0.35)}
-  }
+  mycolors = colors[seq_along(unique(value_labels))]
+  update_geom_defaults("text", list(family = "nunito"))
+  ggplot(data, aes(fill = value_labels, y = outcome_var, x = var_labels, label = prop_labels)) +
+    geom_bar(position = "stack", stat = "identity", width = 0.6) +
+    geom_text(label = ifelse(outcome_var >= 5, prop_labels, NA),
+              position = position_stack(vjust = 0.5), color = "#FFFFFF",
+              fontface = "bold", size = 5) +
+    coord_flip() +
+    scale_fill_manual(values = mycolors, guide=guide_legend(reverse = TRUE)) +
+    scale_x_discrete(limits = rev, expand = c(0, 0)) +
+    scale_y_continuous(labels=function(y) paste0(y, '%'), expand = c(0.01, 0.01)) +
+    labs(title = main_title,
+         y = "",
+         x = " ",
+         caption = source_info,
+         subtitle = subtitle) +
+    theme(text = element_text(size = 14, family = "lato"),
+          plot.title = element_text(size = 17,  face = "bold"),
+          plot.caption = element_text(size = 10.5, hjust = 0, vjust = 2, , color="#36454F"),
+          plot.subtitle = element_text(size = 14,  color="#36454F"),
+          plot.margin = margin(t = 20, r = 20, b = 20, l = 20),
+          #axis.text.x = element_blank(),
+          axis.line.x = element_line(linewidth = 0.6, linetype = "solid", colour = "black"),
+          axis.text.x = element_text(size = textsize_xaxis,  color = "black"),
+          axis.text.y = element_text(margin=margin(r=0), color="black"),
+          axis.ticks = element_blank(),
+          # aspect.ratio = aspect_ratio,
+          axis.text = element_text(size = 14,  color = "#36454F", margin=margin(r=5)),
+          panel.background = element_rect(fill = "white"),
+          panel.grid = element_blank(),
+          panel.grid.major.x = element_line(color = "#585860",
+                                            size = 0.35,
+                                            linetype = 2),
+          legend.position = "top",
+          plot.title.position = "plot",
+          plot.caption.position = "plot",
+          legend.text = element_text(size=12,family = "Playfair Display", color = "black"),
+          legend.title = element_blank(),
+          legend.justification='left',
+          legend.key.size = unit(1, "line"),
+          legend.margin = margin(t=5,b=5, 0, subtitle_h_just)) +
+    {if(fixed_aspect_ratio)theme(aspect.ratio = 0.35)}
 }
+
