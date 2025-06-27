@@ -37,7 +37,7 @@ kcmviz_bar<-function(data, prop = data$prop, proplabel = data$proplabel,
                       subtitle = "",
                       source_info = "",
                       order = "ascend",
-                      color_scheme = "#FDB71A",
+                      color_scheme = "#006633",
                       horiz = TRUE,
                       textsize_yaxis = 16,
                       textsize_xaxis=16){

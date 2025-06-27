@@ -29,7 +29,6 @@
 #' @return A nice pretty graph
 #' @export
 #'
-
 kcmviz_clusterbar<- function(data,
                              element_var = data$element_var, prop = data$prop,
                              lower_bound = data$prop_low, upper_bound = data$prop_upp,
@@ -43,7 +42,7 @@ kcmviz_clusterbar<- function(data,
                              horiz=TRUE,
                              y_label = "",
                              x_label = "",
-                             color_scheme = c("#D67619",  "#006848", "#4B2884", "#FDB71A", "#264d5e","#784885", "#a43d6a"),
+                             color_scheme = c("#390854", "#F57F29","#FDB71A", "#31859F", "#006633"),
                              label_size = 4.25,
                              text_position = 0.75,
                              textsize_yaxis = 16,
@@ -143,7 +142,3 @@ kcmviz_clusterbar<- function(data,
             legend.margin = margin(t=0, b=0, l=0, r=0),
             legend.text = element_markdown(family = "inter-light", size=15)) + coord_flip(expand=TRUE) }
 }
-
-
-
-
