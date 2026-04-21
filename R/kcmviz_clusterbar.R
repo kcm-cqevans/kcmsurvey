@@ -16,7 +16,7 @@
 #' @param main_title Title of your graph, goes top left
 #' @param source_info Source information, goes bottom left. Example "Source: Rider/Non-Rider 2024"
 #' @param subtitle Subtitle - if applicable.
-#' @param sort Sort - the way you want to order bars -- default is alphabetically.
+#' @param sort Sort - the way you want to order bars -- default is alphabetically. sort="group1_asc" will sort in ascending order the values for group 1 (e.g., riders), sort="group2_desc" will sort in descending order based on values for group 2 (e.g., non-riders)
 #' @param horiz Do you want your graph to be horizontal (i.e., with bars that go up and down)? Or graph to be vertical (so that bars goes left to right?)
 #' @param y_label Label for Y axis
 #' @param x_label Label for X axis
@@ -48,22 +48,41 @@ kcmviz_clusterbar<- function(data,
                              textsize_yaxis = 16,
                              textsize_xaxis=16){
   fill_colors = paste0(color_scheme, "")
-  if(sort == "group1"){
+  if(sort == "group1_asc"){
     data = data %>%
       group_by(groupby_var) %>%
       mutate(rank = rank(-prop)) %>%
       arrange(groupby_var, rank)
-  } else if(sort == "group2"){
+  }
+  else if (sort == "group1_desc"){
+    data = data %>%
+      group_by(groupby_var) %>%
+      mutate(rank = rank(prop)) %>%
+      arrange(groupby_var, rank)
+  }
+  else if(sort == "group2_asc"){
     data = data %>%
       group_by(groupby_var) %>%
       mutate(rank = rank(-prop)) %>%
       arrange(match(groupby_var, unique(groupby_var)[2]), rank)
-  } else if(sort == "group3"){
+  }
+  else if(sort == "group2_desc"){
+    data = data %>%
+      group_by(groupby_var) %>%
+      mutate(rank = rank(prop)) %>%
+      arrange(match(groupby_var, unique(groupby_var)[2]), rank)
+  }else if(sort == "group3_asc"){
     data = data %>%
       group_by(groupby_var) %>%
       mutate(rank = rank(-prop)) %>%
       arrange(match(groupby_var, unique(groupby_var)[3]), rank)
-  } else if(sort == "alpha"){
+  }
+  else if(sort == "group3_desc"){
+    data = data %>%
+      group_by(groupby_var) %>%
+      mutate(rank = rank(prop)) %>%
+      arrange(match(groupby_var, unique(groupby_var)[3]), rank)
+  }else if(sort == "alpha"){
     data = data[order(data$element_var),]
   }
   if(horiz==TRUE){
