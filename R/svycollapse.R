@@ -36,7 +36,7 @@ svycollapse <- function(data, element_var = NULL, response_category = NULL, wgt 
       as_survey_design(ids = 1, weights = .data[[wgt]]) %>%
       group_by(.data[[groupby_var]], .data[[element_var]], .data[[response_category]]) %>%
       summarize(prop = 100 * survey_mean(variable = .data[[response_category]], na.rm = TRUE), .groups = 'drop') %>%
-      filter(.data[[response_category]] == 100 | .data[[response_category]] == 1) %>%
+      filter( .data[[response_category]] == 1) %>%
       mutate(proplabel = paste0(round(prop, 1), "%"))
   } else if (!is.null(groupby_var) & binary_response_category==FALSE) {
     data %>%
@@ -63,7 +63,7 @@ svycollapse <- function(data, element_var = NULL, response_category = NULL, wgt 
       as_survey_design(ids = 1, weights = .data[[wgt]]) %>%
       group_by(.data[[element_var]], .data[[response_category]]) %>%
       summarize(prop = 100 * survey_mean(variable = .data[[response_category]], na.rm = TRUE), .groups = 'drop') %>%
-      filter(.data[[response_category]] == 100 | .data[[response_category]] == 1) %>%
+      filter( .data[[response_category]] == 1) %>%
       mutate(proplabel = paste0(round(prop, 1), "%"))
   }
 
