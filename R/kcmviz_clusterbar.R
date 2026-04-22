@@ -30,134 +30,152 @@
 #' @export
 #'
 kcmviz_clusterbar<- function(data,
-                             element_var = data$element_var, prop = data$prop,
+                             element_var = data$element_var,
+                             prop = data$prop,
                              lower_bound = data$prop_low, upper_bound = data$prop_upp,
-                             proplabel = data$proplabel, groupby_var = data$groupby_var,
-                             ymin = 0,
-                             ymax = 100,
-                             main_title = "",
-                             source_info = "",
-                             subtitle = "",
+                             proplabel = data$proplabel,
+                             groupby_var = data$groupby_var,
+                             ymin = 0, ymax = 100,
+                             main_title = "", source_info = "", subtitle = "",
                              sort = "",
-                             horiz=TRUE,
-                             y_label = "",
-                             x_label = "",
-                             color_scheme = c("#390854", "#F57F29","#FDB71A", "#31859F", "#006633"),
+                             horiz = TRUE,
+                             y_label = "", x_label = "",
+                             color_scheme = c("#390854", "#F57F29", "#FDB71A", "#31859F", "#006633"),
                              label_size = 4.25,
                              text_position = 0.75,
                              textsize_yaxis = 16,
-                             textsize_xaxis=16){
-  fill_colors = paste0(color_scheme, "")
-  if(sort == "group1_asc"){
-    data = data %>%
-      group_by(groupby_var) %>%
-      mutate(rank = rank(-prop)) %>%
-      arrange(groupby_var, rank)
+                             textsize_xaxis = 16) {
+  # Ensure expected columns exist
+  needed <- c("element_var", "prop", "proplabel", "groupby_var")
+  miss <- setdiff(needed, names(data))
+  if (length(miss) > 0) {
+    stop("Missing columns in `data`: ", paste(miss, collapse = ", "))
   }
-  else if (sort == "group1_desc"){
-    data = data %>%
-      group_by(groupby_var) %>%
-      mutate(rank = rank(prop)) %>%
-      arrange(groupby_var, rank)
+
+  # Compute the desired order of element_var based on sort directive
+  # All groups will use the same x-order derived from the specified target group.
+  # "group1_asc"/"group1_desc" -> use the first group level;
+  # "group2_asc"/"group2_desc" -> second level; "group3_*" -> third level.
+  get_target_group_order <- function(df, group_index, ascending = TRUE) {
+    lvls <- unique(df$groupby_var)
+    if (length(lvls) < group_index) {
+      stop("Requested group index ", group_index, " but only ",
+           length(lvls), " group(s) present.")
+    }
+    target <- lvls[group_index]
+    out <- df %>%
+      filter(groupby_var == target) %>%
+      arrange(if (ascending) prop else desc(prop)) %>%
+      pull(element_var)
+    # In case of ties, `arrange` is stable; ensure unique order
+    unique(out)
   }
-  else if(sort == "group2_asc"){
-    data = data %>%
-      group_by(groupby_var) %>%
-      mutate(rank = rank(-prop)) %>%
-      arrange(match(groupby_var, unique(groupby_var)[2]), rank)
+
+  # Derive the order vector based on `sort`
+  order_vec <- NULL
+  if (sort == "group1_asc") {
+    order_vec <- get_target_group_order(data, group_index = 1, ascending = TRUE)
+  } else if (sort == "group1_desc") {
+    order_vec <- get_target_group_order(data, group_index = 1, ascending = FALSE)
+  } else if (sort == "group2_asc") {
+    order_vec <- get_target_group_order(data, group_index = 2, ascending = TRUE)
+  } else if (sort == "group2_desc") {
+    order_vec <- get_target_group_order(data, group_index = 2, ascending = FALSE)
+  } else if (sort == "group3_asc") {
+    order_vec <- get_target_group_order(data, group_index = 3, ascending = TRUE)
+  } else if (sort == "group3_desc") {
+    order_vec <- get_target_group_order(data, group_index = 3, ascending = FALSE)
+  } else if (sort == "alpha") {
+    order_vec <- sort(unique(data$element_var))
   }
-  else if(sort == "group2_desc"){
-    data = data %>%
-      group_by(groupby_var) %>%
-      mutate(rank = rank(prop)) %>%
-      arrange(match(groupby_var, unique(groupby_var)[2]), rank)
-  }else if(sort == "group3_asc"){
-    data = data %>%
-      group_by(groupby_var) %>%
-      mutate(rank = rank(-prop)) %>%
-      arrange(match(groupby_var, unique(groupby_var)[3]), rank)
+
+  # If we computed an order, set factor levels on element_var
+  if (!is.null(order_vec)) {
+    # Include any levels not present in the target (e.g., if some element_var only appears in other groups)
+    all_levels <- unique(c(order_vec, unique(data$element_var)))
+    # Keep target-derived levels first, followed by any extras in alpha order to avoid NA placement
+    extras <- setdiff(all_levels, order_vec)
+    final_levels <- c(order_vec, sort(extras))
+    data <- data %>%
+      mutate(
+        element_var = factor(element_var, levels = final_levels)
+      )
+  } else {
+    # Default: keep current order of appearance
+    data <- data %>%
+      mutate(element_var = factor(element_var, levels = unique(element_var)))
   }
-  else if(sort == "group3_desc"){
-    data = data %>%
-      group_by(groupby_var) %>%
-      mutate(rank = rank(prop)) %>%
-      arrange(match(groupby_var, unique(groupby_var)[3]), rank)
-  }else if(sort == "alpha"){
-    data = data[order(data$element_var),]
+
+  # Colors
+  fill_colors <- paste0(color_scheme, "")
+
+  # Shared plot bits
+  update_geom_defaults("text", list(family = "inter"))
+
+  base_plot <- ggplot(
+    data = data,
+    aes(
+      x = factor(element_var, levels = levels(element_var)),
+      y = prop,
+      fill = groupby_var,
+      color = groupby_var
+    )
+  ) +
+    geom_bar(position = "dodge", stat = "identity", width = 0.75) +
+    geom_text(
+      aes(label = proplabel, y = prop, group = groupby_var),
+      position = position_dodge(width = text_position),
+      size = label_size, fontface = "bold",
+      show.legend = FALSE,
+      vjust = if (horiz) -0.5 else NULL,
+      hjust = if (!horiz) -0.05 else NULL
+    ) +
+    scale_fill_manual(values = fill_colors) +
+    scale_color_manual(values = color_scheme) +
+    scale_y_continuous(limits = c(ymin, ymax), expand = expansion(mult = 0.002)) +
+    labs(
+      title = main_title,
+      y = y_label,
+      x = x_label,
+      caption = source_info
+    ) +
+    { if (subtitle != "") labs(subtitle = subtitle) } +
+    theme(
+      text = element_text(size = 16, family = "inter"),
+      plot.title = element_text(size = 20, family = "inter", face = "bold"),
+      plot.caption = element_text(size = 16, vjust = 2, hjust = 0.02, family = "inter", color = "#585860"),
+      panel.background = element_blank(),
+      panel.border = element_blank(),
+      axis.line.x = element_line(linewidth = 0.6, linetype = "solid", colour = "black"),
+      axis.line.y = element_line(linewidth = 0.6, linetype = "solid", colour = "black"),
+      axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
+      axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
+      axis.ticks = element_blank(),
+      legend.position = "top",
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      legend.title = element_blank(),
+      legend.justification = "left",
+      legend.margin = margin(t = 0, b = 0),
+      legend.text = element_markdown(family = "inter-light", size = 15)
+    )
+
+  if (horiz) {
+    base_plot +
+      scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 9)) +
+      panel_grid_major_y()
+  } else {
+    base_plot +
+      scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 45)) +
+      panel_grid_major_x() +
+      coord_flip(expand = TRUE)
   }
-  if(horiz==TRUE){
-    update_geom_defaults("text", list(family = "inter"))
-    ggplot(data=data, aes(x=factor(element_var, levels = unique(element_var)), y=prop, fill = groupby_var, color = groupby_var)) +
-      geom_bar(position = "dodge", stat="identity", width = 0.75) +
-      geom_text(aes(label=proplabel, y = prop, group = groupby_var),
-                position = position_dodge(width = text_position),
-                vjust=-.5, size = label_size, fontface = "bold",
-                show.legend = FALSE) +
-      scale_fill_manual(values = fill_colors) +
-      scale_color_manual(values = color_scheme) +
-      scale_y_continuous(limits = c(ymin, ymax), expand = expansion(mult = 0.002)) +
-      scale_x_discrete(labels = function(x) str_wrap(x, width = 9)) +
-      labs(title=main_title,
-           y = y_label,
-           x = x_label,
-           caption = source_info) +
-      {if(subtitle != "")labs(subtitle = subtitle)}+
-      theme(text = element_text(size = 16, family = "inter"),
-            plot.title = element_text(size = 20, family = "inter", face = "bold"),
-            plot.caption = element_text(size = 16, vjust = 2, hjust = 0.02, family = "inter", color="#585860"),
-            panel.background = element_blank(),
-            panel.border = element_blank(),
-            axis.line.x = element_line(linewidth = 0.6, linetype = "solid", colour = "black"),
-            axis.line.y = element_line(linewidth = 0.6, linetype = "solid", colour = "black"),
-            axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
-            axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
-            axis.ticks = element_blank(),
-            panel.grid.major.y = element_line(color = "#585860",
-                                              size = 0.35,
-                                              linetype = 2),
-            legend.position = "top",
-            plot.title.position = "plot",
-            plot.caption.position = "plot",
-            legend.title = element_blank(),
-            legend.justification='left',
-            legend.margin = margin(t=0, b=0),
-            legend.text = element_markdown(family = "inter-light", size=15))
-  }
-  else if(horiz==FALSE){
-    update_geom_defaults("text", list(family = "inter"))
-    ggplot(data=data, aes(x=factor(element_var, levels = unique(element_var)), y=prop, fill = groupby_var, color = groupby_var)) +
-      geom_bar(position = "dodge", stat="identity", width = 0.75) +
-      geom_text(aes(label=proplabel, y = prop, group = groupby_var),
-                position = position_dodge(width = text_position),
-                hjust=-.05, size = label_size, fontface = "bold",
-                show.legend = FALSE) +
-      scale_fill_manual(values = fill_colors) +
-      scale_color_manual(values = color_scheme) +
-      scale_y_continuous(limits = c(ymin, ymax), expand = expansion(mult = 0.002)) +
-      scale_x_discrete(labels = function(x) str_wrap(x, width = 45)) +
-      labs(title=main_title,
-           y = y_label,
-           x = x_label,
-           caption = source_info) +
-      {if(subtitle != "")labs(subtitle = subtitle)}+
-      theme(text = element_text(size = 16, family = "inter"),
-            plot.title = element_text(size = 20, family = "inter", face = "bold"),
-            plot.caption = element_text(size = 16, vjust = 2, hjust = 0.02, family = "inter", color="#585860"),
-            panel.background = element_blank(),
-            panel.border = element_blank(),
-            axis.line.x = element_line(linewidth = 0.6, linetype = "solid", colour = "black"),
-            axis.line.y = element_line(linewidth = 0.6, linetype = "solid", colour = "black"),
-            axis.text.x = element_text(size = textsize_xaxis, family = "inter-light", color = "black"),
-            axis.text.y = element_text(size = textsize_yaxis, family = "inter-light", color = "black"),
-            axis.ticks = element_blank(),
-            panel.grid.major.x = element_line(color = "#585860",
-                                              size = 0.35,
-                                              linetype = 2),
-            plot.title.position = "plot",
-            plot.caption.position = "plot",
-            legend.position = "top",
-            legend.title = element_blank(),
-            legend.justification='left',
-            legend.margin = margin(t=0, b=0, l=0, r=0),
-            legend.text = element_markdown(family = "inter-light", size=15)) + coord_flip(expand=TRUE) }
+}
+
+# Helper functions for grid lines (optional)
+panel_grid_major_y <- function() {
+  theme(panel.grid.major.y = element_line(color = "#585860", size = 0.35, linetype = 2))
+}
+panel_grid_major_x <- function() {
+  theme(panel.grid.major.x = element_line(color = "#585860", size = 0.35, linetype = 2))
 }
